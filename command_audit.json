@@ -1,0 +1,230 @@
+[
+  {
+    "file": "src\\commands\\giveaways\\giveaway.js",
+    "name": "giveaway",
+    "description": "Giveaway management",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\invites\\invites.js",
+    "name": "invites",
+    "description": "Invite tracking and management",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\logging\\logs.js",
+    "name": "logs",
+    "description": "Configure the audit logging system",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\case.js",
+    "name": "case",
+    "description": "Manage moderation cases",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\channel.js",
+    "name": "channel",
+    "description": "Channel management commands",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\history.js",
+    "name": "history",
+    "description": "View full moderation history for a user",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\modconfig.js",
+    "name": "modconfig",
+    "description": "Configure moderation settings",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\modlogs.js",
+    "name": "modlogs",
+    "description": "Configure moderation logs",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\purge.js",
+    "name": "purge",
+    "description": "Bulk delete messages",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\role.js",
+    "name": "role",
+    "description": "Role management commands",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\slowmode.js",
+    "name": "slowmode",
+    "description": "Set channel slowmode",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\user.js",
+    "name": "mod",
+    "description": "User moderation commands",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\voice.js",
+    "name": "voice",
+    "description": "Voice moderation commands",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\moderation\\warn.js",
+    "name": "warn",
+    "description": "Warning system commands",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\roles\\reactionrole.js",
+    "name": "reactionrole",
+    "description": "Manage reaction role panels",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\antilink.js",
+    "name": "antilink",
+    "description": "Configure Anti-Link protection",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\antinuke.js",
+    "name": "antinuke",
+    "description": "Configure the Anti-Nuke security system",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\antiraid.js",
+    "name": "antiraid",
+    "description": "Configure Anti-Raid protection",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\antispam.js",
+    "name": "antispam",
+    "description": "Configure Anti-Spam protection",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\automod.js",
+    "name": "automod",
+    "description": "Global AutoMod settings (Exemptions & Logging)",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\backup.js",
+    "name": "backup",
+    "description": "Manage server backups",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\filter.js",
+    "name": "filter",
+    "description": "Advanced AutoMod filters and content blocking",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\logsetup.js",
+    "name": "logsetup",
+    "description": "Configure the premium audit logging system",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\restore.js",
+    "name": "restore",
+    "description": "Restore server from backup",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\security\\whitelist.js",
+    "name": "whitelist",
+    "description": "Manage trusted users who bypass security checks",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\social\\reels.js",
+    "name": "reels",
+    "description": "Advanced Instagram Reels Manager",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\social\\stalk.js",
+    "name": "stalk",
+    "description": "Look up an Instagram profile",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\tickets\\ticket.js",
+    "name": "ticket",
+    "description": "Enterprise ticket system",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\afk.js",
+    "name": "afk",
+    "description": "Set your status to away",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\botinfo.js",
+    "name": "botinfo",
+    "description": "View information about Vorn",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\editor.js",
+    "name": "editor",
+    "description": "Open the visual welcome card editor",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\embed.js",
+    "name": "embed",
+    "description": "Create and send a custom embed",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\guide.js",
+    "name": "guide",
+    "description": "Interactive documentation for all Vorn systems",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\poll.js",
+    "name": "poll",
+    "description": "Create a poll",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\serverinfo.js",
+    "name": "serverinfo",
+    "description": "View detailed server information",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\userinfo.js",
+    "name": "userinfo",
+    "description": "View detailed user information",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\utility\\welcome.js",
+    "name": "welcome",
+    "description": "Configure the welcome system",
+    "subcommands": []
+  },
+  {
+    "file": "src\\commands\\voice\\jtc.js",
+    "name": "jtc",
+    "description": "Manage Join-to-Create voice system",
+    "subcommands": []
+  }
+]

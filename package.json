@@ -1,0 +1,23 @@
+{
+  "name": "vorn",
+  "version": "1.0.0",
+  "description": "Vorn — Premium Discord Bot with Advanced Channel-Based Database",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "vorn"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.88",
+    "axios": "^1.13.6",
+    "discord-html-transcripts": "^3.2.0",
+    "discord.js": "^14.14.1"
+  }
+}

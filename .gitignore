@@ -1,0 +1,8 @@
+# Dependencies
+node_modules/
+
+# Config with secrets
+config.json
+
+# Logs
+*.log
