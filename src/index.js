@@ -3,7 +3,7 @@
  * Main Entry Point
  */
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const express = require('express');
 
 // Initialize Web Server for Render
@@ -77,6 +77,12 @@ client.logging = null;
 client.once('clientReady', async () => {
     console.log(`[Vorn] Logged in as ${client.user.tag}`);
     console.log(`[Vorn] Serving ${client.guilds.cache.size} servers`);
+
+    // Premium RPC Status
+    client.user.setPresence({
+        activities: [{ name: '/guide | Securing servers', type: ActivityType.Watching }],
+        status: 'dnd',
+    });
 
     // Initialize database
     try {
