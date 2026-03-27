@@ -10,7 +10,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Apify Config
-const APIFY_TOKEN = require('../../../config.json').apifyToken || process.env.APIFY_TOKEN;
+let APIFY_TOKEN = process.env.APIFY_TOKEN;
+try { if (!APIFY_TOKEN) APIFY_TOKEN = require('../../../config.json').apifyToken; } catch (e) {}
 const APIFY_ACTOR = 'presetshubham~instagram-reel-downloader';
 
 class ReelsManager {

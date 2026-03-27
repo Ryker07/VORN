@@ -6,7 +6,8 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const axios = require('axios');
 
-const APIFY_TOKEN = require('../../../config.json').apifyToken || process.env.APIFY_TOKEN;
+let APIFY_TOKEN = process.env.APIFY_TOKEN;
+try { if (!APIFY_TOKEN) APIFY_TOKEN = require('../../../config.json').apifyToken; } catch (e) {}
 const APIFY_ACTOR = 'apify~instagram-profile-scraper';
 
 const INVISIBLE = 0x2b2d31;

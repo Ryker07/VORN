@@ -4,7 +4,19 @@
  */
 
 const { Client, GatewayIntentBits } = require('discord.js');
-const config = require('../config.json');
+
+let config;
+try {
+    config = require('../config.json');
+} catch (e) {
+    config = {
+        token: process.env.DISCORD_TOKEN || process.env.TOKEN,
+        clientId: process.env.CLIENT_ID,
+        databaseServerId: process.env.DATABASE_SERVER_ID,
+        databaseCategoryId: process.env.DATABASE_CATEGORY_ID,
+        apifyToken: process.env.APIFY_TOKEN
+    };
+}
 const CommandHandler = require('./handlers/commandHandler');
 const EventHandler = require('./handlers/eventHandler');
 const ChannelDatabase = require('./database/ChannelDatabase');
