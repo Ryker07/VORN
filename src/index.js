@@ -4,6 +4,13 @@
  */
 
 const { Client, GatewayIntentBits } = require('discord.js');
+const express = require('express');
+
+// Initialize Web Server for Render
+const app = express();
+const port = process.env.PORT || 3000;
+app.get('/', (req, res) => res.send('Vorn is online and running!'));
+app.listen(port, () => console.log(`[Vorn] Web server listening on port ${port}`));
 
 let config;
 try {
