@@ -264,29 +264,57 @@ class InviteManager {
     }
 
     /**
-     * Get sorted leaderboard
+     * Get sorted leaderboard — merges tracked DB data with live Discord invite counts
      */
     async getLeaderboard(guildId, page = 1) {
         const data = await this.getData(guildId);
         const perPage = 10;
 
-        const sorted = Object.entries(data.users)
-            .map(([userId, stats]) => ({
-                userId,
-                total: this.getTotal(stats),
-                ...stats
-            }))
-            .filter(u => u.total > 0)
+        // Build a merged map: userId -> total invites
+        const merged = new Map();
+
+        // 1. Add all tracked users from database
+        for (const [userId, stats] of Object.entries(data.users)) {
+            const total = this.getTotal(stats);
+            if (total > 0) {
+                merged.set(userId, total);
+            }
+        }
+
+        // 2. Fetch live invite data from Discord API and merge
+        try {
+            const guild = this.client.guilds.cache.get(guildId);
+            if (guild) {
+                const invites = await guild.invites.fetch();
+                for (const [, invite] of invites) {
+                    if (invite.inviter && invite.uses > 0) {
+                        const uid = invite.inviter.id;
+                        // Use whichever is higher: tracked total or live uses
+                        const current = merged.get(uid) || 0;
+                        if (!merged.has(uid)) {
+                            // User not in DB at all — use live count
+                            merged.set(uid, invite.uses);
+                        }
+                        // If user IS in DB, keep the DB value (it's more accurate with fake/left deductions)
+                    }
+                }
+            }
+        } catch {
+            // No permission to fetch invites — fall back to DB-only data
+        }
+
+        const sorted = Array.from(merged.entries())
+            .map(([userId, total]) => ({ userId, total }))
             .sort((a, b) => b.total - a.total);
 
         const totalPages = Math.max(1, Math.ceil(sorted.length / perPage));
-        const safeePage = Math.min(Math.max(1, page), totalPages);
-        const start = (safeePage - 1) * perPage;
+        const safePage = Math.min(Math.max(1, page), totalPages);
+        const start = (safePage - 1) * perPage;
         const entries = sorted.slice(start, start + perPage);
 
         return {
             entries,
-            page: safeePage,
+            page: safePage,
             totalPages,
             totalEntries: sorted.length
         };
