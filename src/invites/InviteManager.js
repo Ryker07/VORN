@@ -286,21 +286,28 @@ class InviteManager {
             const guild = this.client.guilds.cache.get(guildId);
             if (guild) {
                 const invites = await guild.invites.fetch();
+
+                // Sum all invite uses per user across all their codes
+                const liveUses = new Map();
                 for (const [, invite] of invites) {
                     if (invite.inviter && invite.uses > 0) {
                         const uid = invite.inviter.id;
-                        // Use whichever is higher: tracked total or live uses
-                        const current = merged.get(uid) || 0;
-                        if (!merged.has(uid)) {
-                            // User not in DB at all — use live count
-                            merged.set(uid, invite.uses);
-                        }
-                        // If user IS in DB, keep the DB value (it's more accurate with fake/left deductions)
+                        liveUses.set(uid, (liveUses.get(uid) || 0) + invite.uses);
+                    }
+                }
+
+                // Merge: use live data for users not in DB, keep DB data for tracked users
+                for (const [uid, uses] of liveUses) {
+                    if (!merged.has(uid)) {
+                        merged.set(uid, uses);
+                    } else {
+                        // Use the higher value between DB and live
+                        merged.set(uid, Math.max(merged.get(uid), uses));
                     }
                 }
             }
-        } catch {
-            // No permission to fetch invites — fall back to DB-only data
+        } catch (err) {
+            console.error('[Vorn Invites] Failed to fetch live invites for leaderboard:', err.message);
         }
 
         const sorted = Array.from(merged.entries())
