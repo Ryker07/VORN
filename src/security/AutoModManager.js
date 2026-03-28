@@ -506,7 +506,7 @@ class AutoModManager {
             if (!logChannel?.isTextBased()) return;
 
             const embed = this.client.embeds.create()
-                .setTitle('🛡️ AutoMod Action Taken')
+                .setTitle('AutoMod Action Taken')
                 .setColor('#ff0000') // Red for automod
                 .setDescription([
                     `**User** ─ ${message.author} \`[${message.author.id}]\``,

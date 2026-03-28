@@ -150,24 +150,24 @@ module.exports = {
         }
         else if (sub === 'view') {
             const embed = VornEmbed.create()
-                .setTitle('⚙️ Logging Configuration')
-                .setDescription(`**Status:** ${config.enabled ? '🟢 Enabled' : '🔴 Disabled'}
+                .setTitle('Logging Configuration')
+                .setDescription(`**Status:** ${config.enabled ? '[ENABLED]' : '[DISABLED]'}
                 **Default Channel:** ${config.defaultChannelId ? `<#${config.defaultChannelId}>` : 'Not Set'}`)
                 .addFields(
                     {
-                        name: '📁 Categories',
+                        name: 'Categories',
                         value: Object.keys(config.categories).slice(0, 8).map(c =>
-                            `${config.categories[c] ? '🟢' : '🔴'} **${c}**: ${config.channels[c] ? `<#${config.channels[c]}>` : '*(Default)*'}`
+                            `[${config.categories[c] ? 'ON' : 'OFF'}] **${c}**: ${config.channels[c] ? `<#${config.channels[c]}>` : '*(Default)*'}`
                         ).join('\n'),
                         inline: false
                     },
                     {
-                        name: '🙈 Ignored Channels',
+                        name: 'Ignored Channels',
                         value: config.ignoredChannels.length > 0 ? config.ignoredChannels.map(c => `<#${c}>`).join(', ') : 'None',
                         inline: true
                     },
                     {
-                        name: '🛡️ Ignored Roles',
+                        name: 'Ignored Roles',
                         value: config.ignoredRoles.length > 0 ? config.ignoredRoles.map(r => `<@&${r}>`).join(', ') : 'None',
                         inline: true
                     }

@@ -85,7 +85,7 @@ class GiveawayWizard {
         );
 
         const row2 = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId(`gwdraft_roles_${draftId}`).setLabel('Select Roles').setEmoji('🛡️').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId(`gwdraft_roles_${draftId}`).setLabel('Select Roles').setStyle(ButtonStyle.Secondary),
             new ButtonBuilder().setCustomId(`gwdraft_start_${draftId}`).setLabel('🚀 Start Giveaway').setStyle(ButtonStyle.Success)
         );
 
@@ -154,7 +154,7 @@ class GiveawayWizard {
 
         if (action === 'roles') {
             const embed = VornEmbed.create()
-                .setTitle('🛡️ Role Selection')
+                .setTitle('Role Selection')
                 .setDescription('Select the roles using the menus below. You can assign Required Roles and Bypass Roles.');
 
             const reqMenu = new RoleSelectMenuBuilder()

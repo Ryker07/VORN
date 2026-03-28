@@ -132,29 +132,29 @@ module.exports = {
 
         if (subcommand === 'view') {
             const embed = VornEmbed.create()
-                .setTitle('🛡️ Premium AutoMod Framework')
+                .setTitle('AutoMod Framework')
                 .setDescription('Use `/filter` to manage rules, limits, and custom warnings.');
 
             // Words
-            const wordStatus = config.words.enabled ? '🟢' : '🔴';
+            const wordStatus = config.words.enabled ? 'ON' : 'OFF';
             embed.addFields({
-                name: `${wordStatus} Word Phrases`,
+                name: `Word Phrases — [${wordStatus}]`,
                 value: `**Words:** ${config.words.list.length}\n**Action:** \`${config.words.action}\`\n**Warn:** ${config.words.warningMessage}`,
                 inline: true
             });
 
             // Invites
-            const invStatus = config.antilink.block_invites ? '🟢' : '🔴';
+            const invStatus = config.antilink.block_invites ? 'ON' : 'OFF';
             embed.addFields({
-                name: `${invStatus} Discord Invites`,
+                name: `Discord Invites — [${invStatus}]`,
                 value: `**Action:** \`${config.antilink.invite_action || config.antilink.action}\`\n**Warn:** ${config.antilink.invite_warning}`,
                 inline: true
             });
 
             // Files
-            const fileStatus = config.files.enabled ? '🟢' : '🔴';
+            const fileStatus = config.files.enabled ? 'ON' : 'OFF';
             embed.addFields({
-                name: `${fileStatus} File Extensions`,
+                name: `File Extensions — [${fileStatus}]`,
                 value: `**Blocked:** ${config.files.blocked_extensions.length || 'None'}\n**Action:** \`${config.files.action}\``,
                 inline: true
             });
@@ -162,9 +162,9 @@ module.exports = {
             // Mention Spam checks
             for (const mod of ['caps', 'emojis', 'mentions']) {
                 const s = config.antispam[mod];
-                const status = s.enabled ? '🟢' : '🔴';
+                const status = s.enabled ? 'ON' : 'OFF';
                 embed.addFields({
-                    name: `${status} Spam — ${mod.toUpperCase()}`,
+                    name: `Spam — ${mod.toUpperCase()} — [${status}]`,
                     value: `**Limit:** ${s.limit || s.threshold}\n**Action:** \`${s.action}\`\n**Warn:** ${s.warningMessage}`,
                     inline: true
                 });

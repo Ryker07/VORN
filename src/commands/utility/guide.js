@@ -149,7 +149,7 @@ const GUIDE_DATA = {
             {
                 name: 'Audit Logs',
                 content: [
-                    '### Premium Audit Logs',
+                    '### Audit Logs',
                     '',
                     '> Detailed, beautiful tracking of server events',
                     '',
@@ -168,18 +168,38 @@ const GUIDE_DATA = {
         description: 'Spam · Links · Content Filtering',
         sections: [
             {
+                name: 'Overview & Config',
+                content: [
+                    '### AutoMod Core Settings',
+                    '',
+                    '> Dashboard and global overrides for all filtering systems',
+                    '',
+                    '**Configuration**',
+                    '┃ `/filter view` — View dashboard of all active filters',
+                    '┃ `/automod admin [immune]` — Toggle if admins bypass filters',
+                    '┃ `/automod log [channel]` — Set dedicated AutoMod log channel',
+                    '',
+                    '**Exemptions** (Ignore list)',
+                    '┃ `/automod ignore channel [add/remove] [channel]`',
+                    '┃ `/automod ignore role [add/remove] [role]`',
+                    '┃ `/automod ignore list` — View all bypassed entities',
+                    '',
+                    '-# Admins bypass everything by default unless changed'
+                ]
+            },
+            {
                 name: 'Content Filters',
                 content: [
-                    '### AutoMod Content Filtering',
+                    '### Word & File Filtering',
                     '',
-                    '> Intercept and block exact phrases or file types instantly',
+                    '> Intercept and block exact phrases or file uploads instantly',
                     '',
-                    '**Word & Phrase Blocking**',
-                    '┃ `/filter words add [word] [exact/contains/regex]`',
+                    '**Word Blocking**',
+                    '┃ `/filter words add [word] [type]` — Types: Exact, Contains, Regex',
                     '┃ `/filter words remove [word]`',
                     '┃ `/filter words config [action] [warning]`',
                     '',
-                    '**File Extension Blocking**',
+                    '**File Extensions**',
                     '┃ `/filter files block [extension]` (e.g. .exe, .apk)',
                     '┃ `/filter files allow [extension]`',
                     '┃ `/filter files config [action] [warning]`',
@@ -188,43 +208,24 @@ const GUIDE_DATA = {
                 ]
             },
             {
-                name: 'Link & Invites',
+                name: 'Links & Spam',
                 content: [
-                    '### Link & Invite Blocking',
+                    '### Invites & Chat Spam',
                     '',
-                    '> Protect your server from unauthorized advertisements',
+                    '> Stop raid flooding, Discord invite drops, and mass-mentions',
                     '',
                     '**Discord Invites**',
-                    '┃ `/filter invites toggle [on/off]`',
+                    '┃ `/filter invites toggle [state]`',
                     '┃ `/filter invites config [action] [warning]`',
                     '╸ Automatically allows invites pointing to THIS server',
                     '',
-                    '**Global Link Filter**',
-                    '┃ Managed internally by Vorn (Beta)',
-                    '',
-                    '-# Invite filter automatically catches discord.gg, discord.com/invite, etc.'
-                ]
-            },
-            {
-                name: 'Spam Modules',
-                content: [
-                    '### Anti-Spam System',
-                    '',
-                    '> Stop chat floods, mass-mentions, and annoying text',
-                    '',
-                    '**Available Modules**',
+                    '**Spam Modules**',
                     '╸ Rate Limit · Mentions · Caps · Newlines',
-                    '╸ Duplicates · Emojis · Zalgo · Mass Attachments',
+                    '╸ Emojis · Duplicates · Zalgo · Mass Attachments',
                     '',
-                    '**Setup**',
                     '┃ `/filter spam setup [module] [limit] [action] [warning]`',
                     '',
-                    '**Global AutoMod Settings**',
-                    '┃ `/filter view` — Dashboard of all active filters',
-                    '┃ `/automod log [channel]` — Set audit log channel',
-                    '┃ `/automod ignore channel/role` — Manage exemptions',
-                    '',
-                    '-# Admins bypass all AutoMod filters by default'
+                    '-# Actions: Warn, Mute, Kick, Ban, Delete Only'
                 ]
             }
         ]
@@ -855,7 +856,7 @@ const GUIDE_DATA = {
                 content: [
                     '### Instagram Reels',
                     '',
-                    '> Premium high-quality Reel sharing with native video uploads',
+                    '> High-quality Reel sharing with native video uploads',
                     '',
                     '**Usage**',
                     '┃ `/reels post [url] [caption]`',

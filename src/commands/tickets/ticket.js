@@ -673,7 +673,7 @@ module.exports = {
                 }
 
                 const lines = violations.map(v => {
-                    const type = v.type === 'FIRST_RESPONSE' ? '🔴 First Response' : '🟠 Resolution';
+                    const type = v.type === 'FIRST_RESPONSE' ? '[1st Response]' : '[Resolution]';
                     return `${type} — Ticket **#${v.ticketId}** <#${v.channelId}>\n   ${v.elapsed}min / ${v.sla}min SLA`;
                 });
 

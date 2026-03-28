@@ -132,7 +132,7 @@ module.exports = {
 
                 return interaction.editReply({
                     embeds: [VornEmbed.info('Auto-Escalation', [
-                        `**Status** ─ ${config.escalation.enabled ? '🟢 Enabled' : '🔴 Disabled'}`,
+                        `**Status** ─ ${config.escalation.enabled ? '[ENABLED]' : '[DISABLED]'}`,
                         '',
                         ...lines
                     ].join('\n'))]
@@ -192,10 +192,10 @@ module.exports = {
             return interaction.editReply({
                 embeds: [VornEmbed.info('Moderation Config', [
                     `**Log Channel** ─ ${config.logChannelId ? `<#${config.logChannelId}>` : 'Not set'}`,
-                    `**DM on Action** ─ ${config.dmOnAction ? '🟢 Enabled' : '🔴 Disabled'}`,
+                    `**DM on Action** ─ ${config.dmOnAction ? '[ON]' : '[OFF]'}`,
                     '',
                     '**Auto-Escalation**',
-                    `Status ─ ${config.escalation.enabled ? '🟢 Enabled' : '🔴 Disabled'}`,
+                    `Status ─ ${config.escalation.enabled ? '[ENABLED]' : '[DISABLED]'}`,
                     `Thresholds ─ ${thresh}`,
                     '',
                     '**Warn Decay**',

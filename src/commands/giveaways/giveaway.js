@@ -351,7 +351,7 @@ module.exports = {
             }
 
             const lines = giveaways.slice(0, 15).map(g => {
-                let status = g.ended ? '🔴 Ended' : g.paused ? '⏸️ Paused' : g.dropMode ? '💧 Drop' : '🟢 Active';
+                let status = g.ended ? '[ENDED]' : g.paused ? '[PAUSED]' : g.dropMode ? '[DROP MODE]' : '[ACTIVE]';
                 if (!g.ended && !g.paused && g.startTimestamp > Date.now()) status = '⏰ Scheduled';
                 const entries = [...new Set(g.entries)].length;
                 return `${status} **${g.prize}** ─ ${entries} entries\n-# ID: \`${g.messageId}\``;
