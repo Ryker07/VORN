@@ -56,6 +56,11 @@ module.exports = {
                         .addStringOption(opt => opt.setName('word').setDescription('The word to remove').setRequired(true))
                 )
                 .addSubcommand(sub =>
+                    sub.setName('toggle')
+                        .setDescription('Enable or disable the word filter globally')
+                        .addBooleanOption(opt => opt.setName('state').setDescription('Enabled?').setRequired(true))
+                )
+                .addSubcommand(sub =>
                     sub.setName('config')
                         .setDescription('Configure word filter punishments')
                         .addStringOption(opt => opt.setName('action').setDescription('Punishment type').addChoices(...ACTIONS))
@@ -95,6 +100,11 @@ module.exports = {
                         .addStringOption(opt => opt.setName('extension').setDescription('Extension to allow').setRequired(true))
                 )
                 .addSubcommand(sub =>
+                    sub.setName('toggle')
+                        .setDescription('Enable or disable file extension blocking globally')
+                        .addBooleanOption(opt => opt.setName('state').setDescription('Enabled?').setRequired(true))
+                )
+                .addSubcommand(sub =>
                     sub.setName('config')
                         .setDescription('Configure file filter punishments')
                         .addStringOption(opt => opt.setName('action').setDescription('Punishment type').addChoices(...ACTIONS))
@@ -113,6 +123,12 @@ module.exports = {
                         .addIntegerOption(opt => opt.setName('limit').setDescription('Max allowed threshold/count'))
                         .addStringOption(opt => opt.setName('action').setDescription('Punishment type').addChoices(...ACTIONS))
                         .addStringOption(opt => opt.setName('warning').setDescription('Custom DM warning message'))
+                )
+                .addSubcommand(sub =>
+                    sub.setName('toggle')
+                        .setDescription('Enable or disable a specific spam module')
+                        .addStringOption(opt => opt.setName('module').setDescription('Spam module to toggle').setRequired(true).addChoices(...SPAM_MODULES))
+                        .addBooleanOption(opt => opt.setName('state').setDescription('Enabled?').setRequired(true))
                 )
         )
 
@@ -175,9 +191,15 @@ module.exports = {
 
         // --- Words Logic ---
         if (subGroup === 'words') {
-            config.words.enabled = true; // Auto-enable on config
+            if (subcommand === 'toggle') {
+                const state = interaction.options.getBoolean('state');
+                config.words.enabled = state;
+                await client.automod.setConfig(guildId, config);
+                return interaction.editReply({ embeds: [VornEmbed.success(`Word Filter is now **${state ? 'ENABLED' : 'DISABLED'}**.`)] });
+            }
 
             if (subcommand === 'add') {
+                config.words.enabled = true; // Auto-enable on add
                 const word = interaction.options.getString('word').toLowerCase();
                 const type = interaction.options.getString('type');
 
@@ -205,6 +227,7 @@ module.exports = {
             }
 
             if (subcommand === 'config') {
+                config.words.enabled = true; // Auto-enable on config
                 const action = interaction.options.getString('action');
                 const warning = interaction.options.getString('warning');
 
@@ -241,9 +264,15 @@ module.exports = {
 
         // --- Files Logic ---
         if (subGroup === 'files') {
-            config.files.enabled = true;
+            if (subcommand === 'toggle') {
+                const state = interaction.options.getBoolean('state');
+                config.files.enabled = state;
+                await client.automod.setConfig(guildId, config);
+                return interaction.editReply({ embeds: [VornEmbed.success(`File Extension Filter is now **${state ? 'ENABLED' : 'DISABLED'}**.`)] });
+            }
 
             if (subcommand === 'block') {
+                config.files.enabled = true; // Auto-enable on block
                 let ext = interaction.options.getString('extension').toLowerCase();
                 if (!ext.startsWith('.')) ext = `.${ext}`;
 
@@ -273,6 +302,7 @@ module.exports = {
             }
 
             if (subcommand === 'config') {
+                config.files.enabled = true; // Auto-enable on config
                 const action = interaction.options.getString('action');
                 const warning = interaction.options.getString('warning');
 
@@ -285,36 +315,49 @@ module.exports = {
         }
 
         // --- Spam Logic ---
-        if (subGroup === 'spam' && subcommand === 'setup') {
-            const moduleName = interaction.options.getString('module');
-            const limit = interaction.options.getInteger('limit');
-            const action = interaction.options.getString('action');
-            const warning = interaction.options.getString('warning');
-
-            const current = config.antispam[moduleName];
-            current.enabled = true;
-
-            let changes = [];
-            if (limit) {
-                if (moduleName === 'caps') current.threshold = limit;
-                else current.limit = limit;
-                changes.push(`Limit: \`${limit}\``);
-            }
-            if (action) {
-                current.action = action;
-                changes.push(`Action: \`${action}\``);
-            }
-            if (warning) {
-                current.warningMessage = warning;
-                changes.push(`Warning: "${warning}"`);
+        if (subGroup === 'spam') {
+            if (subcommand === 'toggle') {
+                const moduleName = interaction.options.getString('module');
+                const state = interaction.options.getBoolean('state');
+                
+                config.antispam[moduleName].enabled = state;
+                await client.automod.setConfig(guildId, config);
+                return interaction.editReply({ 
+                    embeds: [VornEmbed.success(`Spam module **${SPAM_MODULES.find(m => m.value === moduleName).name}** is now **${state ? 'ENABLED' : 'DISABLED'}**.`)]
+                });
             }
 
-            await client.automod.setConfig(guildId, config);
-            return interaction.editReply({
-                embeds: [VornEmbed.success(
-                    `Updated **${SPAM_MODULES.find(m => m.value === moduleName).name}** module:\n${changes.join(', ')}`
-                )]
-            });
+            if (subcommand === 'setup') {
+                const moduleName = interaction.options.getString('module');
+                const limit = interaction.options.getInteger('limit');
+                const action = interaction.options.getString('action');
+                const warning = interaction.options.getString('warning');
+
+                const current = config.antispam[moduleName];
+                current.enabled = true;
+
+                let changes = [];
+                if (limit) {
+                    if (moduleName === 'caps') current.threshold = limit;
+                    else current.limit = limit;
+                    changes.push(`Limit: \`${limit}\``);
+                }
+                if (action) {
+                    current.action = action;
+                    changes.push(`Action: \`${action}\``);
+                }
+                if (warning) {
+                    current.warningMessage = warning;
+                    changes.push(`Warning: "${warning}"`);
+                }
+
+                await client.automod.setConfig(guildId, config);
+                return interaction.editReply({
+                    embeds: [VornEmbed.success(
+                        `Updated **${SPAM_MODULES.find(m => m.value === moduleName).name}** module:\n${changes.length > 0 ? changes.join(', ') : 'Enabled with current settings.'}`
+                    )]
+                });
+            }
         }
     }
 };

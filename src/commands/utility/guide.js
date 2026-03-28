@@ -195,11 +195,13 @@ const GUIDE_DATA = {
                     '> Intercept and block exact phrases or file uploads instantly',
                     '',
                     '**Word Blocking**',
+                    '┃ `/filter words toggle [state]`',
                     '┃ `/filter words add [word] [type]` — Types: Exact, Contains, Regex',
                     '┃ `/filter words remove [word]`',
                     '┃ `/filter words config [action] [warning]`',
                     '',
                     '**File Extensions**',
+                    '┃ `/filter files toggle [state]`',
                     '┃ `/filter files block [extension]` (e.g. .exe, .apk)',
                     '┃ `/filter files allow [extension]`',
                     '┃ `/filter files config [action] [warning]`',
@@ -224,6 +226,7 @@ const GUIDE_DATA = {
                     '╸ Emojis · Duplicates · Zalgo · Mass Attachments',
                     '',
                     '┃ `/filter spam setup [module] [limit] [action] [warning]`',
+                    '┃ `/filter spam toggle [module] [state]`',
                     '',
                     '-# Actions: Warn, Mute, Kick, Ban, Delete Only'
                 ]
