@@ -364,24 +364,11 @@ class ModerationManager {
         const channel = guild.channels.cache.get(logChannelId);
         if (!channel || !channel.isTextBased()) return;
 
-        const colorMap = {
-            BAN: '#ff0000',
-            UNBAN: '#00ff00',
-            KICK: '#ffa500',
-            TIMEOUT: '#ffff00',
-            UNTIMEOUT: '#00ff00',
-            WARN: '#ffcc00',
-            MUTE: '#ffff00',
-            SOFTBAN: '#ff6600',
-            PURGE: '#0000ff',
-            TEMPBAN: '#ff3333'
-        };
-
         const autoTag = caseData.auto ? ' `[AUTO]`' : '';
         const durationTag = caseData.duration ? ` (${caseData.duration})` : '';
 
         const embed = VornEmbed.create()
-            .setColor(colorMap[caseData.type] || '#2b2d31')
+            .setColor('#2b2d31')
             .setDescription([
                 `### Case #${caseData.id} | ${caseData.type}${durationTag}${autoTag}`,
                 '',
@@ -401,21 +388,22 @@ class ModerationManager {
     async notifyUser(user, guild, caseData) {
         try {
             const actionNames = {
-                BAN: '🔨 Banned',
-                TEMPBAN: '🔨 Temporarily Banned',
-                KICK: '👢 Kicked',
-                TIMEOUT: '🔇 Timed Out',
-                WARN: '⚠️ Warned',
-                SOFTBAN: '🔨 Softbanned',
-                MUTE: '🔇 Muted'
+                BAN: 'BANNED',
+                TEMPBAN: 'TEMPBANNED',
+                KICK: 'KICKED',
+                TIMEOUT: 'TIMED OUT',
+                WARN: 'WARNED',
+                SOFTBAN: 'SOFTBANNED',
+                MUTE: 'MUTED'
             };
 
             const actionName = actionNames[caseData.type] || caseData.type;
             const durationLine = caseData.duration ? `\n**Duration** ─ ${caseData.duration}` : '';
 
             const embed = VornEmbed.create()
+                .setColor('#2b2d31')
                 .setDescription([
-                    `### ${actionName}`,
+                    `### [${actionName}]`,
                     '',
                     `**Server** ─ ${guild.name}`,
                     `**Reason** ─ ${caseData.reason}${durationLine}`,
