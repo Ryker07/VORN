@@ -20,11 +20,11 @@ const CATEGORIES = {
 };
 
 const COLORS = {
-    create: '#57F287',
-    delete: '#ED4245',
-    update: '#FEE75C',
-    info: '#5865F2',
-    warning: '#F47B67',
+    create: '#2b2d31',
+    delete: '#2b2d31',
+    update: '#2b2d31',
+    info: '#2b2d31',
+    warning: '#ED4245', // Kept red for severe alerts
     neutral: '#2b2d31'
 };
 
