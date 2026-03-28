@@ -11,15 +11,10 @@ try {
     Canvas = null;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// PALETTE — Obsidian Dark Theme
-// ═══════════════════════════════════════════════════════════════
 const THEME = {
     bg: '#09090b',
     card: '#18181b',
-    cardAlt: '#1c1c20',
     accent: '#ffffff',
-    accentDim: '#a1a1aa',
     text: '#fafafa',
     subtext: '#71717a',
     muted: '#52525b',
@@ -36,8 +31,8 @@ class LeaderboardRenderer {
 
     /**
      * Render the invite leaderboard as a canvas image
-     * @param {Array} entries - [{ userId, username, total, avatar? }]
-     * @param {Object} meta - { page, totalPages, guildName, guildIcon? }
+     * @param {Array} entries - [{ userId, username, total, avatarUrl }]
+     * @param {Object} meta - { page, totalPages, guildName }
      * @returns {Buffer}
      */
     static async render(entries, meta) {
@@ -65,18 +60,16 @@ class LeaderboardRenderer {
         ctx.fillRect(0, 0, width, height);
 
         // ── Header ──
-        // Title
         ctx.font = '700 28px Arial';
         ctx.fillStyle = THEME.text;
         ctx.textAlign = 'left';
         ctx.fillText('INVITE LEADERBOARD', padding, 48);
 
-        // Server name
         ctx.font = '400 16px Arial';
         ctx.fillStyle = THEME.subtext;
         ctx.fillText(meta.guildName || '', padding, 72);
 
-        // Separator line
+        // Separator
         ctx.strokeStyle = THEME.border;
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -84,81 +77,101 @@ class LeaderboardRenderer {
         ctx.lineTo(width - padding, headerHeight - 8);
         ctx.stroke();
 
+        // ── Pre-load all avatars in parallel ──
+        const avatarImages = await Promise.all(
+            entries.map(async (entry) => {
+                if (!entry.avatarUrl) return null;
+                try {
+                    return await Canvas.loadImage(entry.avatarUrl);
+                } catch {
+                    return null;
+                }
+            })
+        );
+
         // ── Rows ──
+        const rankColors = { 1: THEME.gold, 2: THEME.silver, 3: THEME.bronze };
+
         for (let i = 0; i < entries.length; i++) {
             const entry = entries[i];
             const y = headerHeight + (i * rowHeight);
             const rank = ((meta.page - 1) * 10) + i + 1;
 
-            // Alternating row background
+            // Alternating row bg
             if (i % 2 === 0) {
                 ctx.fillStyle = THEME.card;
-                ctx.beginPath();
-                ctx.roundRect(padding - 8, y + 2, width - (padding * 2) + 16, rowHeight - 4, 10);
+                this.roundedRect(ctx, padding - 8, y + 2, width - (padding * 2) + 16, rowHeight - 4, 10);
                 ctx.fill();
             }
 
-            // Rank number with medal colors for top 3
-            const rankColors = { 1: THEME.gold, 2: THEME.silver, 3: THEME.bronze };
+            // Rank number
             ctx.font = '700 20px Arial';
             ctx.fillStyle = rankColors[rank] || THEME.muted;
             ctx.textAlign = 'right';
             ctx.fillText(`${String(rank).padStart(2, '0')}`, padding + 38, y + rowHeight / 2 + 7);
 
-            // Avatar circle
+            // Avatar
             const avatarX = padding + 52;
             const avatarY = y + (rowHeight / 2);
             const avatarRadius = 18;
+            const avatarImg = avatarImages[i];
 
-            if (entry.avatarBuffer) {
-                try {
-                    const avatarImg = await Canvas.loadImage(entry.avatarBuffer);
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(avatarX + avatarRadius, avatarY, avatarRadius, 0, Math.PI * 2);
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.drawImage(avatarImg, avatarX, avatarY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
-                    ctx.restore();
-                } catch {
-                    this.drawPlaceholderAvatar(ctx, avatarX + avatarRadius, avatarY, avatarRadius, rank);
-                }
+            if (avatarImg) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(avatarX + avatarRadius, avatarY, avatarRadius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(avatarImg, avatarX, avatarY - avatarRadius, avatarRadius * 2, avatarRadius * 2);
+                ctx.restore();
             } else {
-                this.drawPlaceholderAvatar(ctx, avatarX + avatarRadius, avatarY, avatarRadius, rank);
+                // Placeholder circle
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(avatarX + avatarRadius, avatarY, avatarRadius, 0, Math.PI * 2);
+                ctx.fillStyle = rankColors[rank] || THEME.border;
+                ctx.globalAlpha = 0.3;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.font = '700 16px Arial';
+                ctx.fillStyle = THEME.subtext;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(String(rank), avatarX + avatarRadius, avatarY);
+                ctx.restore();
             }
 
             // Username
             ctx.font = '600 18px Arial';
             ctx.fillStyle = THEME.text;
             ctx.textAlign = 'left';
+            ctx.textBaseline = 'alphabetic';
             const displayName = entry.username.length > 20
                 ? entry.username.substring(0, 18) + '..'
                 : entry.username;
             ctx.fillText(displayName, avatarX + avatarRadius * 2 + 16, y + rowHeight / 2 + 6);
 
-            // Invite count — right aligned
+            // Invite count
             ctx.font = '700 20px Arial';
             ctx.fillStyle = rankColors[rank] || THEME.accent;
             ctx.textAlign = 'right';
             ctx.fillText(`${entry.total}`, width - padding - 80, y + rowHeight / 2 + 6);
 
-            // "invites" label
+            // "joins" label
             ctx.font = '400 14px Arial';
             ctx.fillStyle = THEME.muted;
-            ctx.fillText('invites', width - padding - 8, y + rowHeight / 2 + 6);
+            ctx.fillText('joins', width - padding - 8, y + rowHeight / 2 + 6);
         }
 
         // ── Footer ──
         const footerY = headerHeight + (entries.length * rowHeight) + 16;
 
-        // Separator
         ctx.strokeStyle = THEME.border;
         ctx.beginPath();
         ctx.moveTo(padding, footerY);
         ctx.lineTo(width - padding, footerY);
         ctx.stroke();
 
-        // Page indicator
         ctx.font = '400 14px Arial';
         ctx.fillStyle = THEME.muted;
         ctx.textAlign = 'center';
@@ -168,25 +181,20 @@ class LeaderboardRenderer {
     }
 
     /**
-     * Draw a simple placeholder avatar circle
+     * Draw rounded rectangle (compatible fallback)
      */
-    static drawPlaceholderAvatar(ctx, cx, cy, r, rank) {
-        const rankColors = { 1: THEME.gold, 2: THEME.silver, 3: THEME.bronze };
-        ctx.save();
+    static roundedRect(ctx, x, y, w, h, r) {
         ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fillStyle = rankColors[rank] || THEME.border;
-        ctx.globalAlpha = 0.3;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-
-        // Initial letter
-        ctx.font = '700 16px Arial';
-        ctx.fillStyle = THEME.subtext;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(String(rank), cx, cy);
-        ctx.restore();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
     }
 }
 

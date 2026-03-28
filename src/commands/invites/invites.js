@@ -260,29 +260,20 @@ module.exports = {
         const LeaderboardRenderer = require('../../utils/LeaderboardRenderer');
         if (LeaderboardRenderer.isAvailable()) {
             try {
-                // Build enriched entries with usernames and avatar buffers
-                const enriched = [];
-                for (const entry of lb.entries) {
-                    let username = 'Unknown';
-                    let avatarBuffer = null;
+                // Fetch all users in parallel for speed
+                const userResults = await Promise.all(
+                    lb.entries.map(e => client.users.fetch(e.userId).catch(() => null))
+                );
 
-                    try {
-                        const user = await client.users.fetch(entry.userId);
-                        username = user.displayName || user.username;
-
-                        // Fetch avatar as buffer
-                        const avatarUrl = user.displayAvatarURL({ extension: 'png', size: 64 });
-                        const res = await fetch(avatarUrl);
-                        if (res.ok) avatarBuffer = Buffer.from(await res.arrayBuffer());
-                    } catch {}
-
-                    enriched.push({
+                const enriched = lb.entries.map((entry, i) => {
+                    const user = userResults[i];
+                    return {
                         userId: entry.userId,
-                        username,
+                        username: user ? (user.displayName || user.username) : 'Unknown',
                         total: entry.total,
-                        avatarBuffer
-                    });
-                }
+                        avatarUrl: user ? user.displayAvatarURL({ extension: 'png', size: 64 }) : null
+                    };
+                });
 
                 const buffer = await LeaderboardRenderer.render(enriched, {
                     page: lb.page,

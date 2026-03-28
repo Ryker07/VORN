@@ -288,12 +288,12 @@ class AntiRaidManager {
             const mentionCount = message.mentions.users.size + message.mentions.roles.size;
             if (message.mentions.everyone) {
                 await this.executeAction(member, modules.mention_spam.action, '@everyone/@here spam');
-                try { await message.delete(); } catch {}
+                try { await message.delete(); } catch { }
                 return;
             }
             if (mentionCount >= (modules.mention_spam.limit || 10)) {
                 await this.executeAction(member, modules.mention_spam.action, `Mention spam (${mentionCount} mentions)`);
-                try { await message.delete(); } catch {}
+                try { await message.delete(); } catch { }
                 return;
             }
         }
@@ -392,7 +392,7 @@ class AntiRaidManager {
                                 SendMessages: false,
                                 Speak: false,
                                 Connect: false
-                            }).catch(() => {});
+                            }).catch(() => { });
                         }
                     }
                 } catch (e) {
@@ -432,7 +432,7 @@ class AntiRaidManager {
                     await channel.permissionOverwrites.edit(guild.roles.everyone, {
                         SendMessages: false
                     });
-                } catch {}
+                } catch { }
             }
         }
 
@@ -462,7 +462,7 @@ class AntiRaidManager {
                     await channel.permissionOverwrites.edit(guild.roles.everyone, {
                         SendMessages: null
                     });
-                } catch {}
+                } catch { }
             }
         }
 
