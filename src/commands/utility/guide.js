@@ -1128,6 +1128,9 @@ module.exports = {
         });
 
         collector.on('collect', async (i) => {
+            // Acknowledge the interaction instantly to prevent 3-second timeouts
+            await i.deferUpdate().catch(() => {});
+
             if (i.customId.startsWith('guide_cat_')) {
                 const newCat = i.customId.replace('guide_cat_', '');
                 if (GUIDE_DATA[newCat]) {
@@ -1144,7 +1147,8 @@ module.exports = {
             }
 
             const updatedPayload = await buildPayload();
-            await i.update(updatedPayload);
+            // Since we deferred the update, we must use editReply instead
+            await i.editReply(updatedPayload).catch(() => {});
         });
 
         collector.on('end', async () => {
