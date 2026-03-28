@@ -274,6 +274,8 @@ class InviteManager {
         const merged = new Map();
 
         // 1. Add all tracked users from database
+        const dbUserCount = Object.keys(data.users).length;
+        console.log(`[Vorn LB] DB users: ${dbUserCount}`);
         for (const [userId, stats] of Object.entries(data.users)) {
             const total = this.getTotal(stats);
             if (total > 0) {
@@ -284,8 +286,10 @@ class InviteManager {
         // 2. Fetch live invite data from Discord API and merge
         try {
             const guild = this.client.guilds.cache.get(guildId);
+            console.log(`[Vorn LB] Guild found: ${!!guild}`);
             if (guild) {
                 const invites = await guild.invites.fetch();
+                console.log(`[Vorn LB] Live invites fetched: ${invites.size}`);
 
                 // Sum all invite uses per user across all their codes
                 const liveUses = new Map();
@@ -296,19 +300,22 @@ class InviteManager {
                     }
                 }
 
+                console.log(`[Vorn LB] Unique inviters: ${liveUses.size}`);
+
                 // Merge: use live data for users not in DB, keep DB data for tracked users
                 for (const [uid, uses] of liveUses) {
                     if (!merged.has(uid)) {
                         merged.set(uid, uses);
                     } else {
-                        // Use the higher value between DB and live
                         merged.set(uid, Math.max(merged.get(uid), uses));
                     }
                 }
             }
         } catch (err) {
-            console.error('[Vorn Invites] Failed to fetch live invites for leaderboard:', err.message);
+            console.error('[Vorn LB] Failed to fetch live invites:', err.message);
         }
+
+        console.log(`[Vorn LB] Merged total: ${merged.size}`);
 
         const sorted = Array.from(merged.entries())
             .map(([userId, total]) => ({ userId, total }))
