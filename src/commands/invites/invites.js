@@ -256,6 +256,52 @@ module.exports = {
             });
         }
 
+        // Try canvas render first
+        const LeaderboardRenderer = require('../../utils/LeaderboardRenderer');
+        if (LeaderboardRenderer.isAvailable()) {
+            try {
+                // Build enriched entries with usernames and avatar buffers
+                const enriched = [];
+                for (const entry of lb.entries) {
+                    let username = 'Unknown';
+                    let avatarBuffer = null;
+
+                    try {
+                        const user = await client.users.fetch(entry.userId);
+                        username = user.displayName || user.username;
+
+                        // Fetch avatar as buffer
+                        const avatarUrl = user.displayAvatarURL({ extension: 'png', size: 64 });
+                        const res = await fetch(avatarUrl);
+                        if (res.ok) avatarBuffer = Buffer.from(await res.arrayBuffer());
+                    } catch {}
+
+                    enriched.push({
+                        userId: entry.userId,
+                        username,
+                        total: entry.total,
+                        avatarBuffer
+                    });
+                }
+
+                const buffer = await LeaderboardRenderer.render(enriched, {
+                    page: lb.page,
+                    totalPages: lb.totalPages,
+                    guildName: interaction.guild.name
+                });
+
+                const { AttachmentBuilder } = require('discord.js');
+                const attachment = new AttachmentBuilder(buffer, { name: 'leaderboard.png' });
+
+                return interaction.editReply({
+                    files: [attachment]
+                });
+            } catch (err) {
+                console.error('[Vorn Invites] Canvas render failed, falling back to embed:', err.message);
+            }
+        }
+
+        // Fallback: plain text embed
         const lines = [];
         const startRank = (lb.page - 1) * 10;
 
