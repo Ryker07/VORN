@@ -29,30 +29,34 @@ class AutoModManager {
         if (config.whitelist === undefined) config.whitelist = [];
 
         // Anti-Spam Defaults
-        if (!config.antispam) {
-            config.antispam = {
-                rate_limit: { enabled: false, limit: 5, time: 3000, action: 'mute', muteTime: 60, warningMessage: 'Please slow down your messages.' },
-                mentions: { enabled: false, limit: 5, action: 'warn', warningMessage: 'Too many mentions in one message.' },
-                caps: { enabled: false, threshold: 70, minLength: 10, action: 'warn', warningMessage: 'Please avoid using excessive caps.' },
-                newlines: { enabled: false, limit: 10, action: 'warn', warningMessage: 'Please avoid spamming newlines.' },
-                duplicates: { enabled: false, time: 5000, action: 'mute', muteTime: 60, warningMessage: 'Please stop sending duplicate messages.' },
-                emojis: { enabled: false, limit: 10, action: 'warn', warningMessage: 'Too many emojis in one message.' },
-                zalgo: { enabled: false, limit: 20, action: 'warn', warningMessage: 'Zalgo/glitch text is not allowed here.' },
-                mass_attachments: { enabled: false, limit: 3, action: 'warn', warningMessage: 'Too many attachments in one message.' }
-            };
+        if (!config.antispam || typeof config.antispam !== 'object') config.antispam = {};
+        
+        const spamMods = {
+            rate_limit: { enabled: false, limit: 5, time: 3000, action: 'mute', muteTime: 60, warningMessage: 'Please slow down your messages.' },
+            mentions: { enabled: false, limit: 5, action: 'warn', warningMessage: 'Too many mentions in one message.' },
+            caps: { enabled: false, threshold: 70, minLength: 10, action: 'warn', warningMessage: 'Please avoid using excessive caps.' },
+            newlines: { enabled: false, limit: 10, action: 'warn', warningMessage: 'Please avoid spamming newlines.' },
+            duplicates: { enabled: false, time: 5000, action: 'mute', muteTime: 60, warningMessage: 'Please stop sending duplicate messages.' },
+            emojis: { enabled: false, limit: 10, action: 'warn', warningMessage: 'Too many emojis in one message.' },
+            zalgo: { enabled: false, limit: 20, action: 'warn', warningMessage: 'Zalgo/glitch text is not allowed here.' },
+            mass_attachments: { enabled: false, limit: 3, action: 'warn', warningMessage: 'Too many attachments in one message.' }
+        };
+
+        for (const mod in spamMods) {
+            if (!config.antispam[mod]) config.antispam[mod] = spamMods[mod];
         }
 
         // New Filters (Words & Files)
-        if (!config.words) {
+        if (!config.words || typeof config.words !== 'object') {
             config.words = { enabled: false, list: [], action: 'delete', warningMessage: 'That word or phrase is not allowed here.' };
         }
 
-        if (!config.files) {
+        if (!config.files || typeof config.files !== 'object') {
             config.files = { enabled: false, blocked_extensions: [], action: 'delete', warningMessage: 'That file type is not allowed here.' };
         }
 
         // Anti-Link Defaults
-        if (!config.antilink) {
+        if (!config.antilink || typeof config.antilink !== 'object') {
             config.antilink = {
                 enabled: false,
                 block_invites: true,
