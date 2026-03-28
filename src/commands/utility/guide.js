@@ -154,18 +154,10 @@ const GUIDE_DATA = {
                     '> Detailed, beautiful tracking of server events',
                     '',
                     '**Setup**',
-                    '┃ `/logs enable` / `/logs disable`',
-                    '┃ `/logs channel [channel] [category]`',
-                    '┃ `/logs toggle [category]`',
-                    '┃ `/logs settings` — Bot actions / Mod signatures',
-                    '',
-                    '**Exemptions**',
-                    '┃ `/logs ignore [add/remove] [channel/role/user]`',
-                    '',
-                    '**Overview**',
-                    '┃ `/logs status` — Detailed dashboard of active loggers',
-                    '',
-                    '-# Logs support 10+ categories including Messages, Voice, Roles'
+                    '┃ `/logsetup status [enabled:True]`',
+                    '┃ `/logsetup default_channel [channel]`',
+                    '┃ `/logsetup category_channel [channel] [category]`',
+                    '┃ `/logsetup toggle [category]`',
                 ]
             }
         ]
