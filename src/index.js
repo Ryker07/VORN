@@ -178,6 +178,11 @@ client.on('interactionCreate', async (interaction) => {
     await client.commandHandler.handleInteraction(interaction);
 });
 
+// Debug discord.js connection logs
+client.on('debug', (info) => {
+    console.log(`[Vorn Debug] ${info}`);
+});
+
 // Error handling
 client.on('error', (error) => {
     console.error(`[Vorn] Client error: ${error.message}`);
@@ -206,8 +211,16 @@ process.on('SIGINT', async () => {
 
 
 
+// Validate Token before login
+console.log(`[Vorn] Preparing to log into Discord...`);
+if (!config.token) {
+    console.warn(`[Vorn] WARNING: No token found in config.json or environment variables! Check your Render environment setup.`);
+}
+
 // Login
-client.login(config.token).catch((error) => {
-    console.error(`[Vorn] Login failed: ${error.message}`);
+client.login(config.token).then(() => {
+    console.log(`[Vorn] Login request accepted by Discord API.`);
+}).catch((error) => {
+    console.error(`[Vorn] Login failed EXCEPTION:`, error);
     process.exit(1);
 });
