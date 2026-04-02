@@ -15,7 +15,7 @@ module.exports = {
         // --- CREATE ---
         .addSubcommand(sub =>
             sub.setName('create')
-                .setDescription('Create a new panel')
+                .setDescription('Create a new panel (add more roles later with /reactionrole add)')
                 .addStringOption(opt =>
                     opt.setName('type')
                         .setDescription('Panel type')
@@ -32,21 +32,31 @@ module.exports = {
                 )
                 .addRoleOption(opt =>
                     opt.setName('role1')
-                        .setDescription('First role')
+                        .setDescription('Role 1')
                         .setRequired(true)
                 )
                 .addStringOption(opt =>
                     opt.setName('emoji1')
-                        .setDescription('Emoji for first role')
+                        .setDescription('Emoji for role 1')
                 )
-                .addRoleOption(opt => opt.setName('role2').setDescription('Second role'))
+                .addRoleOption(opt => opt.setName('role2').setDescription('Role 2'))
                 .addStringOption(opt => opt.setName('emoji2').setDescription('Emoji for role 2'))
-                .addRoleOption(opt => opt.setName('role3').setDescription('Third role'))
+                .addRoleOption(opt => opt.setName('role3').setDescription('Role 3'))
                 .addStringOption(opt => opt.setName('emoji3').setDescription('Emoji for role 3'))
-                .addRoleOption(opt => opt.setName('role4').setDescription('Fourth role'))
+                .addRoleOption(opt => opt.setName('role4').setDescription('Role 4'))
                 .addStringOption(opt => opt.setName('emoji4').setDescription('Emoji for role 4'))
-                .addRoleOption(opt => opt.setName('role5').setDescription('Fifth role'))
+                .addRoleOption(opt => opt.setName('role5').setDescription('Role 5'))
                 .addStringOption(opt => opt.setName('emoji5').setDescription('Emoji for role 5'))
+                .addRoleOption(opt => opt.setName('role6').setDescription('Role 6'))
+                .addStringOption(opt => opt.setName('emoji6').setDescription('Emoji for role 6'))
+                .addRoleOption(opt => opt.setName('role7').setDescription('Role 7'))
+                .addStringOption(opt => opt.setName('emoji7').setDescription('Emoji for role 7'))
+                .addRoleOption(opt => opt.setName('role8').setDescription('Role 8'))
+                .addStringOption(opt => opt.setName('emoji8').setDescription('Emoji for role 8'))
+                .addRoleOption(opt => opt.setName('role9').setDescription('Role 9'))
+                .addStringOption(opt => opt.setName('emoji9').setDescription('Emoji for role 9'))
+                .addRoleOption(opt => opt.setName('role10').setDescription('Role 10'))
+                .addStringOption(opt => opt.setName('emoji10').setDescription('Emoji for role 10'))
                 .addStringOption(opt =>
                     opt.setName('description')
                         .setDescription('Panel description')
@@ -177,9 +187,9 @@ module.exports = {
             const mode = interaction.options.getString('mode') || 'normal';
             const style = interaction.options.getString('style') || 'Primary';
 
-            // Collect roles
+            // Collect roles (up to 10 from create, use /reactionrole add for more)
             const roles = [];
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 10; i++) {
                 const role = interaction.options.getRole(`role${i}`);
                 if (role) {
                     const emoji = interaction.options.getString(`emoji${i}`);
